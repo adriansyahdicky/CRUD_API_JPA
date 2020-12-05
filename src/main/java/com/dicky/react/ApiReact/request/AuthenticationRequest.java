@@ -1,2 +1,4 @@
-package com.dicky.react.ApiReact.request;public class AuthenticationRequest {
+package com.dicky.react.ApiReact.request;
+
+public class AuthenticationRequest {
 }
