@@ -1,5 +1,6 @@
 package com.dicky.react.ApiReact.controller;
 
+import com.dicky.react.ApiReact.model.auth.CustomUserPrincipal;
 import com.dicky.react.ApiReact.request.AuthenticationRequest;
 import com.dicky.react.ApiReact.response.JwtResponse;
 import com.dicky.react.ApiReact.service.MyUserDetailService;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,12 +39,13 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailService
+        final CustomUserPrincipal userDetails = (CustomUserPrincipal) userDetailService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, authenticationRequest.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(),
+                userDetails.getAuthorities().toString()));
     }
 
 }
